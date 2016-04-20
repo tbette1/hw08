@@ -1,11 +1,13 @@
 package view;
 
 
-import java.awt.*;
-import model.*;
-import javax.swing.*;
-import controller.BeatController;
+import model.MusicNote;
+import model.Note;
+import model.Pitch;
 import util.NoteComparator;
+
+import javax.swing.*;
+import java.awt.*;
 
 /**
  * A JPanel that draws a viewModel on the screen
@@ -156,12 +158,12 @@ class ConcreteGuiViewPanel extends JPanel {
      */
     private void printPitchesLine(Graphics g) {
         g.setColor(Color.black.darker());
-        for (Note note : new AbsolutePitchRange(viewModel.lowestPitch(),
-                viewModel.highestPitch())) {
+        for (Note pitch : this.viewModel.getAllNotesInRange()) {
             try {
-                String pitchname = note.changePitch(-this.viewModel.getViewTop()).getName();
+                String pitchname = Pitch.pitchFromVal(pitch.getPitch().getVal() -
+                        this.viewModel.getViewTop()).name();
                 g.drawString(pitchname, 0,
-                        (viewModel.highestPitch().midiValue() - note.getPitch().midiValue())
+                        (viewModel.highestPitch().midiValue() - pitch.midiValue())
                                 * GRIDSIZE + YOFFSET + 14);
             } catch (IllegalArgumentException e) {
                 //do nothing, do not draw the note
@@ -170,11 +172,12 @@ class ConcreteGuiViewPanel extends JPanel {
         }
     }
 
-    /**
-     * prints the beat timeline horizontally
-     *
-     * @param g the given graphics
-     */
+
+        /**
+         * prints the beat timeline horizontally
+         *
+         * @param g the given graphics
+         */
     private void printBeatTimeLine(Graphics g) {
         g.setColor(Color.black.darker());
         for (int i = this.getNoteOffset(); i <= viewModel.getLength(); i++) {

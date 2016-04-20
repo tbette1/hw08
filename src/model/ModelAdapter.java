@@ -233,4 +233,9 @@ public class ModelAdapter implements MusicPieceModel {
     public void setTempo(int tempo) {
         m.setTempo(tempo);
     }
+
+    @Override
+    public ArrayList<Note> getAllNotesInRange() {
+        return this.m.getAllNotes();
+    }
 }

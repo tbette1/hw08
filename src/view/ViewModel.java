@@ -83,4 +83,9 @@ public interface ViewModel extends BeatListener {
      * @return the note currently held by the controller
      */
     MusicNote getHeldNote();
+
+    /**
+     * Gets a list of all notes in this model.
+     */
+    ArrayList<Note> getAllNotesInRange();
 }

@@ -130,4 +130,10 @@ public interface MusicPieceModel {
      */
     void setTempo(int tempo);
 
+    /**
+     * Gets a list of all notes in this model.
+     * @return an ArrayList containing all notes representing absolute pitches in this model.
+     */
+    ArrayList<Note> getAllNotesInRange();
+
 }

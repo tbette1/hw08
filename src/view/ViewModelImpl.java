@@ -1,6 +1,7 @@
 package view;
 
 import controller.BeatController;
+import model.MusicNote;
 import model.MusicPieceModel;
 import model.Note;
 
@@ -9,7 +10,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.function.Consumer;
-
 /**
  * Create a ViewModelImpl
  */
@@ -23,7 +23,7 @@ class ViewModelImpl implements MutableViewModel {
     private final List<Consumer<BeatController>> playUpdates;
     private final int NOTE_MOVEMENT_RESOLUTION = 32;
     private final List<Runnable> viewUpdates;
-    private Note heldNote;
+    private MusicNote heldNote;
 
     /**
      * Constructor for ViewModelImpl
@@ -76,25 +76,25 @@ class ViewModelImpl implements MutableViewModel {
     }
 
     @Override
-    public void removeNote(Note n) {
+    public void removeNote(MusicNote n) {
         pieceModel.removeNote(n);
         this.updateView();
     }
 
     @Override
-    public void changeNoteDuration(Note n, int i) {
+    public void changeNoteDuration(MusicNote n, int i) {
         this.pieceModel.changeNoteDuration(n, i);
         this.updateView();
     }
 
     @Override
-    public void addNote(Note n) {
+    public void addNote(MusicNote n) {
         this.pieceModel.addNote(n);
         this.updateView();
     }
 
     @Override
-    public void setHeldNote(Note n) {
+    public void setHeldNote(MusicNote n) {
         this.heldNote = n;
     }
 
@@ -114,7 +114,7 @@ class ViewModelImpl implements MutableViewModel {
     }
 
     @Override
-    public ArrayList<Note> getNotesAt(int i) {
+    public ArrayList<MusicNote> getNotesAt(int i) {
         return this.pieceModel.getNotesAt(i);
     }
 
@@ -150,7 +150,7 @@ class ViewModelImpl implements MutableViewModel {
     }
 
     @Override
-    public Note getHeldNote() {
+    public MusicNote getHeldNote() {
         return this.heldNote;
     }
 
@@ -160,6 +160,13 @@ class ViewModelImpl implements MutableViewModel {
         for (Consumer<BeatController> u : playUpdates) {
             u.accept(timer);
         }
+    }
+
+    /**
+     * Gets a list of all notes in this model.
+     */
+    public ArrayList<Note> getAllNotesInRange() {
+        return this.pieceModel.getAllNotesInRange();
     }
 
     @Override
