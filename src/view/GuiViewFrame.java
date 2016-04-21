@@ -1,12 +1,13 @@
 package view;
 
 
+import controller.BeatController;
+
+import javax.swing.*;
 import java.awt.*;
 import java.awt.event.AdjustmentListener;
 import java.io.IOException;
 import java.util.Objects;
-import controller.*;
-import javax.swing.*;
 
 
 /**
@@ -33,8 +34,8 @@ class GuiViewFrame extends javax.swing.JFrame implements GuiView {
                 this.getWidth(), 0, Math.max(1, viewModel.getLength()));
         vbar = new JScrollBar(JScrollBar.VERTICAL, 0,
                 this.getHeight(), 0,
-                Math.max(1, this.viewModel.highestPitch().getIntValue()
-                        - this.viewModel.lowestPitch().getIntValue()));
+                Math.max(1, this.viewModel.highestPitch().midiValue()
+                        - this.viewModel.lowestPitch().midiValue()));
 
         //register update methods for this view
         this.viewModel.registerUpdates(t -> {
@@ -94,7 +95,7 @@ class GuiViewFrame extends javax.swing.JFrame implements GuiView {
     public Point fromScreenPoint(Point screenPoint) {
         return new Point(viewModel.getViewStart() +
                 (screenPoint.x - ConcreteGuiViewPanel.XOFFSET) / ConcreteGuiViewPanel.GRIDSIZE,
-                viewModel.highestPitch().getIntValue() - viewModel.getViewTop() + 1 -
+                viewModel.highestPitch().midiValue() - viewModel.getViewTop() + 1 -
                         (screenPoint.y - ConcreteGuiViewPanel.YOFFSET) / ConcreteGuiViewPanel.GRIDSIZE);
     }
 

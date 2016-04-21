@@ -1,16 +1,11 @@
 package view;
 
 
+import controller.BeatController;
+import model.MusicNote;
+
+import javax.sound.midi.*;
 import java.util.Objects;
-
-import javax.sound.midi.InvalidMidiDataException;
-import javax.sound.midi.MidiUnavailableException;
-import javax.sound.midi.Receiver;
-import javax.sound.midi.ShortMessage;
-import javax.sound.midi.Synthesizer;
-
-import model.*;
-import controller.*;
 /**
  * A skeleton for MIDI playback. Plays back pieces over MIDI. Rounds tempo  down to the milisecond.
  */
@@ -51,7 +46,7 @@ class MidiViewImpl implements MusicOutputDevice {
             receiver.send(new ShortMessage(ShortMessage.PROGRAM_CHANGE,
                     note.getInstrument()%channelCount, note.getInstrument(), 0), -1);
             receiver.send(new ShortMessage(ShortMessage.NOTE_ON,
-                    note.getInstrument()%channelCount, note.getPitch().getIntValue(),
+                    note.getInstrument()%channelCount, note.getPitch().midiValue(),
                     note.getVolume()), -1/*timestamp*/);
         } catch (InvalidMidiDataException e) {
             e.printStackTrace();
@@ -68,7 +63,7 @@ class MidiViewImpl implements MusicOutputDevice {
     private void stopNote(MusicNote note) {
         try {
             receiver.send(new ShortMessage(ShortMessage.NOTE_OFF,
-                    note.getInstrument()%channelCount, note.getPitch().getIntValue(),
+                    note.getInstrument()%channelCount, note.getPitch().midiValue(),
                     note.getVolume()), -1/*timestamp*/);
         } catch (InvalidMidiDataException e) {
             e.printStackTrace();

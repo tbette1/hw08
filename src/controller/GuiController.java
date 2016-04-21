@@ -1,13 +1,12 @@
 package controller;
 
-import cs3500.music.model.MusicPlayer;
-import cs3500.music.model.NoteImpl;
-import cs3500.music.view.GuiView;
 
 import javax.sound.midi.InvalidMidiDataException;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.ArrayList;
+import javax.swing.Timer;
+import view.*;
 
 /**
  * Controller for the music editor console UI. This takes user inputs and
@@ -16,12 +15,12 @@ import java.util.ArrayList;
  */
 public class GuiController implements IGuiController {
     //Data for GuiController class
-    private MusicPlayer mp;  //get data from model
+    private ViewModel vm;
     private GuiView view;
 
     //State of view trackers
     int currBeat = 0;
-    javax.swing.Timer timer;
+    BeatTimer timer;
     //Input
     private KeyboardHandler kh;
     private MouseHandler mh;
@@ -35,29 +34,16 @@ public class GuiController implements IGuiController {
     /**
      * Constructs a controller for playing the given game model, with the given input and
      * output for communicating with the user.
-     * @param mp: the music to play
+     * @param vm: the view model
      * @param view: the view to draw
      * @param mode: the controllers current mode
      */
 
-    public GuiController(MusicPlayer mp, GuiView view, String mode){
-        this.mp = java.util.Objects.requireNonNull(mp);
+    public GuiController(ViewModel vm, GuiView view, String mode){
+        this.vm = java.util.Objects.requireNonNull(vm);
         this.view = java.util.Objects.requireNonNull(view);
-        this.timer = new javax.swing.Timer(this.view.getTempo() / 10000, new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                try {
-                    if (!view.tick()) {
-                        isitPaused = true;
-                        timer.stop();
-                        System.out.println("Done!");
-                    }
-                } catch (InvalidMidiDataException ie) {
-                    ie.printStackTrace();
-                }
-
-            }
-        });
+        Timer t = new javax.swing.Timer(this.vm.getTempo() / 10000, null);
+        this.timer = new BeatTimer(t);
         //initial state
         this.isitPaused = true;
         this.lastClick = new Point(-1, -1);
@@ -123,7 +109,7 @@ public class GuiController implements IGuiController {
     private void mouseAction(MouseEvent e){
         //performs proper action according to the key pressed.
         this.lastClick = e.getPoint();
-        Point p = this.view.getGridCoors(lastClick);
+        Point p = this.vm.getSelectedPoint(lastClick);
         switch(pressedKey){
             case KeyEvent.VK_A:
                 //this.addNote(this.view.getNoteFromIndex(p.y + 1), p.x);
@@ -155,8 +141,8 @@ public class GuiController implements IGuiController {
             case KeyEvent.VK_M:
                 //NoteImpl n1 = this.view.getNoteFromIndex(this.view.getGridCoors(firstClick).y);
                 //NoteImpl n2 = this.view.getNoteFromIndex(this.view.getGridCoors(secondClick).y);
-                int beat1 = this.view.getGridCoors(firstClick).x;
-                int beat2 = this.view.getGridCoors(secondClick).x;
+                //int beat1 = this.view.getGridCoors(firstClick).x;
+                //int beat2 = this.view.getGridCoors(secondClick).x;
                 //this.moveNote(n1, beat1, n2, beat2);
         }
     }
